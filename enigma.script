@@ -1,0 +1,4 @@
+set title "algoritmo"
+set xlabel "n"
+set ylabel "Tiempo(s)"
+plot "resultados1.txt" using 1:2 title "enigma","resultados.txt" using 1:2 title "enigma mejorado"
