@@ -2,84 +2,90 @@
 #include <stdlib.h>
 #include <time.h>
 
+void enigma_mejorado(float **A,int n){
+	int i,j;
+	
+	for(i = 0; i < n - 1 ; i++){
+		for(j = i + 1; j < n-1 ; j++){
+			A[j][i] = 0;		
+		}		
+	}	
+}
+
 
 void enigma(float **A,int n){
 	int i,j,k;
 
-	int c = 0;
 	for(i = 0; i < n - 1 ; i++){
 		for(j = i + 1; j < n-1 ; j++){
-			for(k = i ; k < n ; k++){
-				//printf(" %.2f - %.2f*(%.2f/%.2f)\n",A[j][k],A[i][k],A[j][i],A[i][i] );
-				A[j][k] = A[j][k] - A[i][k]*(A[j][i]/A[i][i]);
-				c++;
-				//printf("%.2f\n", A[j][k]);
-				//printf("i:%d j:%d k:%d\n", i,j,k);
-
-			}
-			
-		}
-		
+			for(k = i ; k < n ; k++){				
+				A[j][k] = A[j][k] - A[i][k]*(A[j][i]/A[i][i]);			
+			}			
+		}		
 	}
-
-
-	/*
-	int c = 0;
-	
-	for(i = 0; i < n - 1 ; i++){
-		for(j = i + 1; j < n-1 ; j++){
-			c++;
-		
-			A[j][i] = 0;		
-		}
-		
-	}*/
-	printf("\n%d\n",c);
-
 }
 
 
 
 int main(){
-	int i,j,n;
-	srand (time(NULL));
-	FILE *fp;
-	fp = fopen("resultados.txt", "w+");	
-	printf("%d\n",sizeof(float));
-	for(n = 2 ; n < 10 ; n++){
+
+	int i,j,n,N;
+
+	clock_t begin, end;
+	double time_spent;//para medir el tiempo
+
+	printf("Ingrese el n máximo:");
+	scanf("%d",&N);
+
+	srand (time(NULL));//semilla para el random
+	FILE *resultados;
+	resultados = fopen("resultados.txt", "w+");//archivo de salida de resutlados
+
+	for(n = 2 ; n < N + 1; n++){//entrada n desde 2 a 500
+		//se define una matriz de (n-1*n) 
 		float **A = (float **) malloc((n-1)*sizeof(float *));
 		for(i = 0; i < n - 1; i++){
 			A[i] = (float *)malloc(n*sizeof(float));
 		}
 		for(i = 0; i < n -1; i++){
 			for(j = 0; j < n ; j++){
-				A[i][j] = rand() % 100;
+				A[i][j] = rand() % 100;//cada elemento de la matriz es un numero al azar de 0 al 100, revisar rand
 			}
-		}
-
-		fprintf(fp, "--------------------------------------------\nMatriz original\n" );
-		for(i = 0; i < n - 1; i++){
-			for(j = 0; j < n ; j++){
-				fprintf(fp,"%.2f	", A[i][j]);
-			}
-			fprintf(fp,"\n");
-		}
+		}		
+		begin = clock();//tiempo antes de el algoritmo
 		enigma(A,n);
-		fprintf(fp, "--------------------------------------------\n Matriz con enigma\n");
-		for(i = 0; i < n - 1 ; i++){
-			for(j = 0; j < n ; j++){
-				fprintf(fp,"%.2f	", A[i][j]);
-			}
-			fprintf(fp,"\n");
-		}
-		fprintf(fp,"\n");
+		end = clock();
+		time_spent = (double)(end - begin) / CLOCKS_PER_SEC;//tiempo despues del algoritmo
+		fprintf(resultados,"%d	%lf\n",n,time_spent);
 		for(i = 0; i < n - 1; i++){
 			free(A[i]);
 		}
 		free(A);
+	}
 
+	for(n = 2 ; n < N +1; n++){//entrada n desde 2 a 500
+		//se define una matriz de (n-1*n) 
+		float **A = (float **) malloc((n-1)*sizeof(float *));
+		for(i = 0; i < n - 1; i++){
+			A[i] = (float *)malloc(n*sizeof(float));
+		}
+		for(i = 0; i < n -1; i++){
+			for(j = 0; j < n ; j++){
+				A[i][j] = rand() % 100;//cada elemento de la matriz es un numero al azar de 0 al 100, revisar rand
+			}
+		}		
+		begin = clock();//tiempo antes de el algoritmo
+		enigma_mejorado(A,n);
+		end = clock();
+		time_spent = (double)(end - begin) / CLOCKS_PER_SEC;//tiempo despues del algoritmo
+		fprintf(resultados,"%d	%lf\n",n,time_spent);
+		for(i = 0; i < n - 1; i++){
+			free(A[i]);
+		}
+		free(A);
 	}	
-	fclose(fp);
+	
+	fclose(resultados);
 	
 	
 }
