@@ -89,11 +89,76 @@ Tomando \(n_0 = \) 2 se tiene lo siguiente:
 Por lo tanto:
 \[ \exists n_o\  \forall c_1,c_2 \ | \ n_2 = 2,\ 0 \leq c_1 \leq 3/8 \ c_2 \geq 3/8 \]
 \[\Rightarrow f(n) \in \Theta(n^3)\]
+\subsection{Mejora del algoritmo}
+Al comprobar la correctitud del algoritmo enigma se puede apreciar que el tercer ciclo hace muchas operaciones inútiles, por lo tanto, el nuevo algoritmo mejorado propone hacer lo mismo que hace la primera iteración del tercer ciclo for y nada más, esto es, dejar \(A[j][i]\) nulo.
 
+\begin{algorithm}[H]
+\caption{\textbf{Enigma mejorado}\textbf{(var} $A[0 \dots n][0 \dots n + 1]$\textbf{)}}
+\For{\(i = 0\) to  \(n-1\) }{
+	\For{\(j = i+1\) to  \(n-1\)}{
+		
+			\(A[j,i] \leftarrow 0 \)
+			
+	}
+}
 
+\end{algorithm}
+\subsubsection{Demostración de correctitud}
+Se asume que el algoritmo tiene las mismas pre y post condiciones del anterior.
 
+\textbf{Prueba:} 
+Con cada iteración de \(i\) y \(j\) se recorre los elementos bajo la diagonal principal de la matriz (esto se puede notar haciendo un seguimiento, se recorre por cada nivel \(i\), bajando por los niveles \(j\) bajo la diagonal), la única operación de estos elementos es la asignación nula.
 
+\[A[j,i] = 0 \]
+ 
+Finalmente, todos los elementos bajo la diagonal principal de la matriz quedan nulos.
+\subsubsection{Complejidad temporal del algoritmo}
+Para estimar la complejidad del algoritmo, primero se debe calcular la cantidad de operaciones \(f(n)\) elementales del algoritmo, se define como operación básica la asignación nula a elementos de la matriz ya que es la única operacion que hacemos con cada operación, para este algoritmo se considera que no hay mejor ni peor caso, el algoritmo ejecuta siempre la misma cantidad de operaciones. 
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c c||}
+\hline 
+\textbf{i}  &\textbf{j}  \\[0.5ex] \hline\hline
+0  & n - 1 \\ \hline 
+1  & n - 2 \\ \hline 
+2 & n - 3  \\ \hline 
+\dots  & \dots \\ \hline 
+n - 2  &1 \\ \hline 
+n - 1  &0  \\ \hline 
+\end{tabular} 
+\caption{distintos valores de \(i\) y \(j\)  a partir de n.}
+
+\end{table}
+
+La cantidad de iteraciones del segundo ciclo depende del valor de \(i\), la cantidad valores que puede tomar \(j\) por cada valor de \(i\) varía como se ve en el cuadro 1, por lo tanto la cantidad de iteraciones en los dos ciclos sería igual a la suma de los distintos valores posibles del indice \(j\) por cada valor del indice \(i\), es decir: \[(n-1)+(n-2)+ \dots +1+0\]
+
+Y esto es igual a:
+\[\sum_{i=0}^{n-1}  i\]
+\[= \frac{n(n-1)}{2} \]
+Por lo tanto, el algoritmo realiza \(f(n) = \frac{n(n-1)}{2}\) asignaciones a elementos de la matriz.
+ \clearpage
+\subsubsection{Análisis asintótico}
+Se busca una función \(g(n)\) para probar $\Theta$ donde:\\
+
+\( \Theta (g(n))  =  \{ f (n) :\) existen las constantes positivas c$_1$ , c$_2$ y n$_0$ 
+
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(0\leq  c_1 g (n) \leq f (n) \leq c_2 g (n)\) para todo \( n \geq n0 \ \}  \)\\
+
+reemplazando el \(f(n)\) calculado y tomando \(g(n)\) como \(n^2\) se tiene:
+\[0 \leq  c_1 n^2 \leq \frac{n(n-1)}{2} \leq c_2 n^2\]
+\[= 0 \leq  c_1 n^2 \leq \frac{n^2-n}{2} \leq c_2 n^2\]\\
+
+Tomando \(n_0 = \) 2 se tiene lo siguiente:
+\[= 0 \leq  c_1 * 4 \leq \frac{4-2}{2} \leq c_2 * 4\]
+\[= 0 \leq  c_1 * 4 \leq 1 \leq c_2 * 4\]
+Por lo tanto:
+\[ \exists n_o\  \forall c_1,c_2 \ | \ n_2 = 2,\ 0 \leq c_1 \leq 1/4 \ c_2 \geq 1/4 \]
+\[\Rightarrow f(n) \in \Theta(n^2)\]
+\subsubsection{Implementación y experimentación}
+La implementación y experimentación de ambos algoritmos fueron realizadas en el idioma de programación c y van adjuntas a este informe, para más información consulte el archivo leame. A continuación se presetan los resultados obtenidos.
+\subsubsection{Resultados experimentales}
+ 
 
 
 
