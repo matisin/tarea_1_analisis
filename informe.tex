@@ -1,10 +1,9 @@
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-
-\usepackage[ruled,linesnumbered]{algorithm2e}
-
-
+\usepackage[noline,ruled,linesnumbered,spanish]{algorithm2e}
+\usepackage[spanish]{babel}
+\selectlanguage{spanish} 
 
 %Gummi|065|=)
 \title{\textbf{Welcome to Gummi 0.6.6}}
@@ -13,39 +12,98 @@
 		Dion Timmermann}
 \date{}
 \begin{document}
+
 \maketitle
-\section{Problema 1}\begin{flushright}\end{flushright}
-addsa
+\section{Problema 1}
+Para el siguente algoritmo, donde la entrada es una matriz de n $\times$ n+1 números reales, sesadsda
 
 \begin{algorithm}[H]
-
-\caption{void add(String s)}
-
-\eIf{entry = null}{
-	tree.insert(s,1)\;
-	}{
-	tree.remove(entry)\;
-	tree.insert(s, entry.value()+1)\;
-			
-		
+\caption{\textbf{Enigma }\textbf{(var} $A[0 \dots n][0 \dots n + 1]$\textbf{)}}
+\For{\(i = 0\) to  \(n-1\) }{
+	\For{\(j = i+1\) to  \(n-1\)}{
+		\For{\(k = i\) to \(n\) }{
+			\(A[j,k] \leftarrow A[j,k] - A[i,k] \ast  A[j,i] / A[i,i] \)
+		}		
+	}
 }
-cardinality++;
 \end{algorithm}
+\subsection{Correctitud del algoritmo}
+El algoritmo convierte todos los elementos bajo la diagonal principal en nulos, de esta forma, la matriz pasa a ser una matriz triangular superior.
+\subsubsection{Demostración}
+Se define lo siguinte:
 
-\subsection{}
+$\bullet$ \textbf{Pre-condición}: El algoritmo recibe una matriz no ordenada con elementos al azar de tamaño  n $\times$ (n + 1).
+
+$\bullet$ \textbf{Post-condición}: El algoritmo retorna una matriz triangular superior.
+
+\textbf{Prueba:} 
+Con cada iteración de \(i\) y \(j\) se recorre los elementos bajo la diagonal principal de la matriz (esto se puede notar haciendo un seguimiento).En la primera iteración del último ciclo for, por cada valor de los índices \(i\) y \(j\), se tiene que \(k = i\), por lo tanto la expresión de la línea 4 del algoritmo queda de la siguiente forma:
+\[A[j,k] - A[k,k] \ast  A[j,k] / A[k,k] \]
+\[=A[j,k] - A[j,k]  \]
+\[ = 0  \]
+Luego, en las siguientes operaciones del ciclo, el elemento \( A[j,i]  \) de la matriz tiene valor nulo. Entonces, por cada valor de los índices \(i\) y \(j\) donde \( k > i  \) la expresión de la línea 4 del algoritmo queda de la siguiente forma:
+\[A[j,k] - A[i,k] \ast  0 / A[i,i] \]
+\[= A[j,k] - 0 \]
+\[= A[j,k] \]
+Por lo tanto, cada operacion con \( k > i  \) no cambia el valor de \(A[j,k]\). Finalmente, todos los elementos bajo la diagonal principal de la matriz quedan nulos.
+\subsection{Complejidad temporal del algoritmo}
+Para estimar la complejidad del algoritmo, primero se debe calcular la cantidad de operaciones \(f(n)\) elementales del algoritmo, se define como operación básica la multiplicación entre elementos de la matriz, ya que se repite con cada iteración del algoritmo y es la más relevante, para este algoritmo se considera que no hay mejor ni peor caso, el algoritmo ejecuta siempre la misma cantidad de operaciones. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c c c||}
+\hline 
+\textbf{i}  &\textbf{j} & \textbf{k} \\[0.5ex] \hline\hline
+0  & n - 1 & n + 1\\ \hline 
+1  & n - 2 & n \\ \hline 
+2 & n - 3 & n - 1 \\ \hline 
+\dots  & \dots & \dots \\ \hline 
+n - 2  &1 & 3 \\ \hline 
+n - 1  &0 & 2 \\ \hline 
+\end{tabular} 
+\caption{distintos valores de \(i\),\(j\) y \(k\) a partir de n.}
+
+\end{table}
+
+La cantidad de iteraciones del segundo y tercer ciclo dependen del valor de \(i\), la cantidad valores que puede tomar \(j\) por cada valor de \(i\) varía como se ve en el cuadro 1, por lo tanto la cantidad de iteraciones en los dos primeros ciclos sería igual a la suma los distintos valores posibles del indice \(j\) por cada valor del indice \(i\), es decir: \[(n-1)+(n-2)+ \dots +1+0\]
+Además, los distintos valores tomados por \(k\) por cada valor de \(j\) dependen del valor del índice \(i\) y varía como se ve en el cuadro 1, por lo tanto la cantidad de iteraciones en los tres ciclos sería igual a la suma de los distintos valores de \(j\) multiplicado por los distintos valores de el índice \(k\), es decir: \[(n-1)(n+1)+(n-2)n+ \dots +1*3+0*2\]
+Y esto es igual a:
+\[\sum_{i=2}^{n}  (i-1)(i+1)\]
+\[= \sum_{i=1}^{n}  (i^2-1)\]
+\[= \frac{n(n+1)(2n+1)}{6} - n\]
+Por lo tanto, el algoritmo realiza \(f(n) = \frac{n(n+1)(2n+1)}{6} - n \) multiplicaciones entre elementos de la matriz.
+\subsubsection{Análisis asintótico}
+Se busca una función \(g(n)\) para probar $\Theta$ donde:\\
+
+\( \Theta (g(n))  =  \{ f (n) :\) existen las constantes positivas c$_1$ , c$_2$ y n$_0$ 
+
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(0\leq  c_1 g (n) \leq f (n) \leq c_2 g (n)\) para todo \( n \geq n0 \ \}  \)\\
+
+reemplazando el \(f(n)\) calculado y tomando \(g(n)\) como \(n^3\) se tiene:
+\[0 \leq  c_1 n^3 \leq \frac{n(n+1)(2n+1)}{6} - n \leq c_2 n^3\]
+\[= 0 \leq  c_1 n^3 \leq \frac{2n^3+3n^2-5n}{6} \leq c_2 n^3\]\\
+
+Tomando \(n_0 = \) 2 se tiene lo siguiente:
+\[= 0 \leq  c_1 * 8 \leq \frac{2*8+3*4-5*2}{6} \leq c_2 * 8\]
+\[= 0 \leq  c_1 * 8 \leq 3 \leq c_2 * 8\]
+Por lo tanto:
+\[ \exists n_o\  \forall c_1,c_2 \ | \ n_2 = 2,\ 0 \leq c_1 \leq 3/8 \ c_2 \geq 3/8 \]
+\[\Rightarrow f(n) \in \Theta(n^3)\]
 
 
 
-You are now using Gummi 0.6.6. Many new exciting features have been added to the 0.6 series. The document editor is now a tabbed instance, allowing multiple documents to be worked on simultaneously. Using the new projects menu, you can group files together for easy access. 
 
-Support for two high-level {\LaTeX} building systems, \emph{rubber}\footnote{https://launchpad.net/rubber/} \& \emph{latexmk}\footnote{http://www.phys.psu.edu/{\textasciitilde}collins/software/latexmk-jcc/} has been added as well. Your preferred typesetter can be configured through the Compilation tab in the Preferences menu. Typesetters that are not installed on your system will not be selectable. 
 
-Added for your viewing convenience is a continuous preview mode for the PDF. This mode is enabled by default, but can also be disabled through the \emph{(View $\rightarrow$ Page layout in preview)} menu. Complementary to this feature is SyncTeX integration, which allows you to synchronize the position in your editor with the PDF preview. 
 
-\section{Feedback}
-We hope you will enjoy using this release as much as we enjoyed creating it. If you have comments, suggestions or wish to report an issue you are experiencing - contact us at: \emph{https://github.com/alexandervdm/gummi}.
 
-\section{One more thing}
-If you are wondering where your old default text is; it has been stored as a template. The template menu can be used to access and restore it. 
+
+
+
+
+
+
+
+
+
 
 \end{document}
